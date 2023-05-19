@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+  <!-- mobile styling -->
+  <meta name="theme-color" content="#448AFF">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#448AFF">
+  <meta name="apple-mobile-web-app-title" content="IZ-RP">
+
+
+
+  <title>IZRP</title>
+
+  <!-- Required Stylesheets -->
+  <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
+
+  <!-- PouchDB - in-browser database -->
+  <script src="https://cdn.jsdelivr.net/gh/pouchdb/pouchdb@6.3.4/dist/pouchdb.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/pouchdb/pouchdb@6.3.4/dist/pouchdb.find.min.js"></script>
+
+  <!-- our styles -->
+  <link href="./src/izrp.css" type="text/css" rel="stylesheet" media="screen,projection" />
+
+  <!-- Load polyfills to support older browsers -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"></script>
+
+  <!-- Required scripts -->
+  <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+  <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+  <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+
+</head>
+
+<body>
+  <!-- Our application root element -->
+  <div id="app">
+    <!--TOP BAR-->
+
+    <b-navbar type="dark" variant="secondary" position: sticky>
+      <!--menu-->
+
+      <b-button v-if="mode =='showlist'" v-b-toggle.bt-hamburger size="lg">
+        <b-icon icon="list" aria-hidden="true"></b-icon>
+      </b-button>
+
+      <!--back-->
+
+      <b-button v-if="mode != 'showlist'" v-on:click="onBack" size="lg">
+        <b-icon icon="arrow-left" aria-hidden="true"></b-icon>
+      </b-button>
+
+      <!--Title-->
+      <b-navbar-brand href="#">{{pagetitle}}</b-navbar-brand>
+
+
+      <!--Settings-->
+      <b-button size="lg" v-if="mode == 'showlist'" v-on:click="onClickSettings">
+        <b-icon icon="gear-fill" aria-hidden="true"></b-icon>
+      </b-button>
+
+      <!--start sync-->
+      <b-button size="lg" v-if="mode == 'settings'" v-on:click="onClickStartSync">
+        <b-icon icon="save" aria-hidden="true"></b-icon>
+      </b-button>
+
+
+
+      <!--save animal-->
+      <b-button size="lg" v-if="mode == 'addlist'" v-on:click="onClickSaveAnimal">
+        <b-icon icon="save" aria-hidden="true"></b-icon>
+      </b-button>
+
+    </b-navbar><!--END TOP BAR-->
+
+    <!--SIDE BAR-->
+    <b-sidebar id="bt-hamburger" title="Sidebar" :backdrop-variant="dark" backdrop shadow>
+      <div class="px-3 py-2">
+        <b-img src="https://picsum.photos/500/200/?image=54" fluid thumbnail></b-img>
+        <li>Dashboard</li>
+        <li>Lista de Animais</li>
+      </div>
+    </b-sidebar>
+
+    <!-- floating 'add Animal button -->
+    <div class="floatingbutton" v-if="mode == 'showlist'">
+      <b-button pill variant="success" class="bt-round" v-on:click="onClickAddAnimal">
+        <b-icon icon="plus"></b-icon>
+      </b-button>
+    </div> <!-- floating 'add animal' button -->
+
+
+    <!--Main Container-->
+    <main class="main-content">
+      <!-- list of animals -->
+      {{debug}}
+      <b-row align-h="center" v-if="mode == 'showlist'">
+        <b-list-group class="list-group" style="max-width: 400px">
+          <b-list-group-item button v-for="list in sortedAnimalList" style="max-width: 400px" v-on:click="onClickTag(list._id, list.tag)">
+            <b-row align-v="center">
+              <b-col cols="auto" class="text-center">
+                <div>{{list.name.substr(0,8)}}</div>
+                <div class="h1">{{printTag(list.tag)}}</div>
+              </b-col>
+              <b-col>
+                <div>grupo: {{list.group}}</div>
+                <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} </div>
+              </b-col>
+              <b-col cols="auto">
+                <b-button size="sm" v-on:click="onClickEdit(list._id, list.tag)">
+                  <b-icon icon="pencil-square" aria-hidden="true"></b-icon>
+                </b-button>
+                <b-button size="sm" v-on:click="onClickDelete(list._id, list.tag)">
+                  <b-icon icon="trash" aria-hidden="true"></b-icon>
+                </b-button>
+              </b-col>
+            </b-row>
+          </b-list-group-item>
+        </b-list-group>
+
+      </b-row>
+      <!-- list of animals -->
+
+      <!--Settings-->
+      <b-card v-if="mode == 'settings'">
+        <b-card-text>
+          You can sync your shopping lists to a remote Apache CouchDB, IBM Cloudant or PouchDB server. Supply the URL,
+          including
+          credential and database name and hit <b-icon icon="save" aria-hidden="true"></b-icon>.
+        </b-card-text>
+        <!-- Cloudant URL -->
+        <b-form @submit="onClickStartSync">
+          <label>Sync URL</label>
+          <b-form-input placeholder="e.g http://localhost:5984/list" type="url" v-model="syncURL"></b-form-input>
+          <label>User</label>
+          <b-form-input placeholder="user name" v-model="user"></b-form-input>
+        </b-form>
+        <h4>Sync Status</h4>
+        <!-- visualisation of sync status -->
+        <b-button disabled size="sm" variant="warning" v-if="syncStatus == 'notsyncing'">
+          <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
+          Not Syncing
+        </b-button>
+        <b-button disabled size="sm" variant="danger" v-if="syncStatus == 'syncerror'">
+          <b-icon-exclamation-triangle-fill></b-icon-exclamation-triangle-fill>
+          Error
+        </b-button>
+        <b-button size="sm" variant="success" v-if="syncStatus == 'syncing'" disabled>
+          <b-icon-check></b-icon-check>
+          Syncing
+        </b-button>
+        
+
+
+      </b-card> <!--End Setings-->
+
+      <!--New Animal or edit Animal-->
+      <div>
+        <b-card v-if="mode == 'addlist'" sm>
+
+          <b-row class="justify-content-md-center">
+            <b-col sm="2">
+              <div role="group" v-if="!isEdit">
+                <label for="input-live">TAG:</label>
+                <b-form-input id="tag" v-model="singleAnimal.tag" :state="validateTag"
+                  aria-describedby="input-live-feedback" placeholder="Tag do Animal" trim number
+                  required></b-form-input>
+                <!-- This will only be shown if the preceding input has an invalid state -->
+                <b-form-invalid-feedback id="input-live-feedback">
+                  Não é possivel adicionar essa TAG
+                </b-form-invalid-feedback>
+              </div>
+              <div role="group" v-else>
+                <label for="input-live">TAG:</label>
+                <b-form-input id="tag" v-model="singleAnimal.tag" number disabled readonly></b-form-input>
+                <!-- This will only be shown if the preceding input has an invalid state -->
+                <b-form-invalid-feedback id="input-live-feedback">
+                  Não é possivel adicionar essa TAG
+                </b-form-invalid-feedback>
+              </div>
+            </b-col lg="2">
+            <b-col>
+              <div role="group">
+                <label for="input-live">Nome:</label>
+                <b-form-input id="name" v-model="singleAnimal.name" placeholder="Nome do Animal" trim></b-form-input>
+              </div>
+            </b-col>
+            <b-col lg="2">
+              <div role="group">
+                <label for="input-live">Data de Nascimento:</label>
+                <div>
+                  <b-form-datepicker v-model="singleAnimal.bornAt" required></b-form-datepicker>
+                </div>
+              </div>
+            </b-col>
+          </b-row>
+          <b-row>
+            <div role="group">
+              <label for="input-live">Tratamento:</label>
+              <div md>
+                <b-form-select v-model="selectTreat" required>
+                  <b-form-select-option :value="null">Please select an option</b-form-select-option>
+                  <b-form-select-option v-for="(treat,index) in treatmentList" v-bind:value="index">{{treat}}</b-form-select-option>
+                  <b-form-select-option value=-1>Add new</b-form-select-option>
+                </b-form-select>
+              </div>
+            </div>
+          </b-row>
+          <b-row v-if="selectTreat == -1">
+            <b-form-input v-model = "newTreat"></b-form-input>
+          </b-row>
+          <b-row>
+            <div role="group">
+              <label for="input-live">Lote:</label>
+              <div md>
+                <b-form-select v-model="selectBatch" required>
+                  <b-form-select-option :value="null">Please select an option</b-form-select-option>
+                  <b-form-select-option v-for="(batch,index) in batchList" v-bind:value="index">{{batch.farm}} -
+                    {{batch.arrivalDate}}</b-form-select-option>
+                  <b-form-select-option value=-1>Add new</b-form-select-option>
+                </b-form-select>
+              </div>
+            </div>
+          </b-row>
+          
+          <b-row v-if=" selectBatch == -1 ">
+            <b-row sm="4">
+              <div role="group">
+                <label for="input-live">Fazenda de origem:</label>
+                <div md>
+                  <b-form-select v-model="selectFarm" required>
+                    <b-form-select-option :value="null">Please select an option</b-form-select-option>
+                    <b-form-select-option v-for="(farm,index) in farmList"
+                      v-bind:value="index">{{farm}}</b-form-select-option>
+                    <b-form-select-option value=-1>Add new</b-form-select-option>
+                  </b-form-select>
+                </div>
+              </div>
+            </b-row>
+            <b-row>
+              <b-col sm="4" v-if="selectFarm == -1 ">
+                <b-form-input v-model = "newFarm"></b-form-input>
+              </b-col>
+              <b-col sm="4">
+                <div role="group">
+                  <label for="input-live">Data do Lote:</label>
+                  <div>
+                    <b-form-datepicker v-model="singleBatch.arrivalDate" required></b-form-datepicker>
+                  </div>
+                </div>
+              </b-col>
+            </b-row>
+            <b-row>
+
+              </b-col>
+            </b-row>
+            <b-row>
+              <div role="group">
+            </b-row>
+        </b-card>
+      </div><!--New Animal-->
+
+    </main>
+
+  </div>
+  <!-- cuid - unique id generator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cuid/1.3.8/browser-cuid.min.js"></script>
+
+  <!-- PouchDB - in-browser database -->
+  <script src="https://cdn.jsdelivr.net/gh/pouchdb/pouchdb@6.3.4/dist/pouchdb.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/pouchdb/pouchdb@6.3.4/dist/pouchdb.find.min.js"></script>
+
+
+  <!-- Start running your app -->
+  <script src="./src/izrp.js"></script>
+
+</body>
+
+</html>

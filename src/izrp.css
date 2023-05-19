@@ -1,0 +1,29 @@
+.main-content{
+    overflow: hidden;
+}
+
+.navbar-brand {
+    width: 100%;
+    left: 0;
+    top: 0;
+    text-align: center;
+    margin: auto;
+}
+
+.floatingbutton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.bt-round{
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    text-align: center;
+}
+
+.list-group{
+    overflow: hidden;
+}
