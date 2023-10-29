@@ -115,7 +115,7 @@
           <b-tabs content-class="mt-3" align="center " pills v-model="selected">
             <b-tab align="center">
               <template #title>
-                Todos ({{animalList.length}})
+                All({{animalList.length}})
               </template>
               <b-list-group class="list-group" style="max-width: 400px">
                 <b-list-group-item class="bg-warning" button v-for="list in sortedAnimalListLate"
@@ -153,7 +153,7 @@
             </b-tab>
             <b-tab align="center">
               <template #title>
-                Piquete 1 ({{animalList.filter(function (piquete1) { return piquete1.stall == 1; }).length}})
+                Piq1({{animalList.filter(function (piquete1) { return piquete1.stall == 1; }).length}})
               </template>
               <b-list-group class="list-group" style="max-width: 400px">
                 <b-list-group-item class="bg-warning" button v-for="list in piquete1AnimalListLate"
@@ -191,7 +191,7 @@
             </b-tab>
             <b-tab align="center">
               <template #title>
-                Piquete 2 ({{animalList.filter(function (piquete2) { return piquete2.stall == 2; }).length}})
+                Piq2({{animalList.filter(function (piquete2) { return piquete2.stall == 2; }).length}})
               </template>
               <b-list-group class="list-group" style="max-width: 400px">
                 <b-list-group class="list-group" style="max-width: 400px">
@@ -228,10 +228,10 @@
                   </b-list-group-item>
                 </b-list-group>
             </b-tab>
-            <!--
+            
             <b-tab align="center">
               <template #title>
-                Zinco ({{animalList.filter(function (zinco) { return zinco.group == "zinco"; }).length}})
+                Zn({{animalList.filter(function (zinco) { return zinco.group == "zinco"; }).length}})
               </template>
               <b-tabs content-class="mt-3" align="center " pills v-model="selected2">
                 <b-tab align="center">
@@ -315,7 +315,7 @@
 
             <b-tab align="center">
               <template #title>
-                Placebo ({{animalList.filter(function (placebo) { return placebo.group == "placebo"; }).length}})
+                Pcbo({{animalList.filter(function (placebo) { return placebo.group == "placebo"; }).length}})
               </template>
               <b-tabs content-class="mt-3" align="center " pills v-model="selected3">
                 <b-tab align="center">
@@ -395,7 +395,7 @@
                   </b-list-group>
                 </b-tab>
               </b-tabs>
-            </b-tab> -->
+            </b-tab> 
 
           </b-tabs>
         </div>
