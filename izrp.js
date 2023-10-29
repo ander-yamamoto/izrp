@@ -144,6 +144,12 @@ var app = new Vue({
       { text: 'Todos', value: 0 },
       { text: 'Piquete 1', value: 1 },
       { text: 'Piquete 2', value: 2 }
+    ],
+    selected2: 0,
+    selected3: 0,
+    options2: [
+      { text: 'Piquete 1', value: 1 },
+      { text: 'Piquete 2', value: 2 }
     ]
   },
   computed: {
@@ -166,14 +172,14 @@ var app = new Vue({
       let list = [];
       let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
       for (let i = 0; i < this.animalList.length; i++) {
-        var aux =0;
+        var aux = 0;
         for (let j = 0; j < late.length; j++) {
           if (late[j].tag == this.animalList[i].tag) {
-            aux +=1;
+            aux += 1;
           }
         }
         if (aux == 0) list.push(this.animalList[i]);
-        
+
       }
 
       return list.sort(sortTag);
@@ -212,14 +218,14 @@ var app = new Vue({
       let list = [];
       let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
       for (let i = 0; i < animalFiltered.length; i++) {
-        var aux =0;
+        var aux = 0;
         for (let j = 0; j < late.length; j++) {
           if (late[j].tag == animalFiltered[i].tag) {
-            aux +=1;
+            aux += 1;
           }
         }
         if (aux == 0) list.push(animalFiltered[i]);
-        
+
       }
 
       return list.sort(sortTag);
@@ -244,14 +250,14 @@ var app = new Vue({
       let list = [];
       let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
       for (let i = 0; i < animalFiltered.length; i++) {
-        var aux =0;
+        var aux = 0;
         for (let j = 0; j < late.length; j++) {
           if (late[j].tag == animalFiltered[i].tag) {
-            aux +=1;
+            aux += 1;
           }
         }
         if (aux == 0) list.push(animalFiltered[i]);
-        
+
       }
 
       return list.sort(sortTag);
@@ -272,6 +278,147 @@ var app = new Vue({
       return list2.sort(sortTag);
     },
 
+    /**
+     * Calculates the animal list but sorted by
+     * tag order
+     * 
+     * @returns {Array}
+     */
+    zincPiquete1AnimalListLate: function () {
+      let animalFiltered = this.animalList.filter(function (zinco) { return zinco.group == "zinco"; }).filter(function (piquete) { return piquete.stall == 1; });
+      let list = [];
+      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < animalFiltered.length; i++) {
+        var aux = 0;
+        for (let j = 0; j < late.length; j++) {
+          if (late[j].tag == animalFiltered[i].tag) {
+            aux += 1;
+          }
+        }
+        if (aux == 0) list.push(animalFiltered[i]);
+
+      }
+
+      return list.sort(sortTag);
+    },
+    zincPiquete1AnimalListOk: function () {
+      let animalFiltered = this.animalList.filter(function (zinco) { return zinco.group == "zinco"; }).filter(function (piquete) { return piquete.stall == 1; });
+      let list2 = [];
+      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < animalFiltered.length; i++) {
+        for (let j = 0; j < ok2.length; j++) {
+
+          if (ok2[j].tag == animalFiltered[i].tag) {
+            list2.push(animalFiltered[i]);
+          }
+        }
+
+      }
+      return list2.sort(sortTag);
+    },
+    zincPiquete2AnimalListLate: function () {
+      let animalFiltered = this.animalList.filter(function (zinco) { return zinco.group == "zinco"; }).filter(function (piquete) { return piquete.stall == 2; });
+      let list = [];
+      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < animalFiltered.length; i++) {
+        var aux = 0;
+        for (let j = 0; j < late.length; j++) {
+          if (late[j].tag == animalFiltered[i].tag) {
+            aux += 1;
+          }
+        }
+        if (aux == 0) list.push(animalFiltered[i]);
+
+      }
+
+      return list.sort(sortTag);
+    },
+    zincPiquete2AnimalListOk: function () {
+      let animalFiltered = this.animalList.filter(function (zinco) { return zinco.group == "zinco"; }).filter(function (piquete) { return piquete.stall == 2; });
+      let list2 = [];
+      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < animalFiltered.length; i++) {
+        for (let j = 0; j < ok2.length; j++) {
+
+          if (ok2[j].tag == animalFiltered[i].tag) {
+            list2.push(animalFiltered[i]);
+          }
+        }
+
+      }
+      return list2.sort(sortTag);
+    },
+
+    /**
+     * Calculates the animal list but sorted by
+     * tag order
+     * 
+     * @returns {Array}
+     */
+    placPiquete1AnimalListLate: function () {
+      let animalFiltered = this.animalList.filter(function (placebo) { return placebo.group == "placebo"; }).filter(function (piquete) { return piquete.stall == 1; });
+      let list = [];
+      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < animalFiltered.length; i++) {
+        var aux = 0;
+        for (let j = 0; j < late.length; j++) {
+          if (late[j].tag == animalFiltered[i].tag) {
+            aux += 1;
+          }
+        }
+        if (aux == 0) list.push(animalFiltered[i]);
+
+      }
+
+      return list.sort(sortTag);
+    },
+    placPiquete1AnimalListOk: function () {
+      let animalFiltered = this.animalList.filter(function (placebo) { return placebo.group == "placebo"; }).filter(function (piquete) { return piquete.stall == 1; });
+      let list2 = [];
+      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < animalFiltered.length; i++) {
+        for (let j = 0; j < ok2.length; j++) {
+
+          if (ok2[j].tag == animalFiltered[i].tag) {
+            list2.push(animalFiltered[i]);
+          }
+        }
+
+      }
+      return list2.sort(sortTag);
+    },
+    placPiquete2AnimalListLate: function () {
+      let animalFiltered = this.animalList.filter(function (placebo) { return placebo.group == "placebo"; }).filter(function (piquete) { return piquete.stall == 2; });
+      let list = [];
+      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < animalFiltered.length; i++) {
+        var aux = 0;
+        for (let j = 0; j < late.length; j++) {
+          if (late[j].tag == animalFiltered[i].tag) {
+            aux += 1;
+          }
+        }
+        if (aux == 0) list.push(animalFiltered[i]);
+
+      }
+
+      return list.sort(sortTag);
+    },
+    placPiquete2AnimalListOk: function () {
+      let animalFiltered = this.animalList.filter(function (placebo) { return placebo.group == "placebo"; }).filter(function (piquete) { return piquete.stall == 2; });
+      let list2 = [];
+      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < animalFiltered.length; i++) {
+        for (let j = 0; j < ok2.length; j++) {
+
+          if (ok2[j].tag == animalFiltered[i].tag) {
+            list2.push(animalFiltered[i]);
+          }
+        }
+
+      }
+      return list2.sort(sortTag);
+    },
 
 
     /**
@@ -744,6 +891,17 @@ var app = new Vue({
      * home screen with a lit of animal list.
      */
     onBack: function () {
+      if (this.mode == 'editanimal') this.mode = 'editlist';
+      else this.mode = 'showlist';
+      this.pagetitle = 'IZ-RP';
+    },
+
+
+    /**
+    * Called when the home button is pressed. Returns to the
+    * home screen with a lit of animal list.
+    */
+    onClickHome: function () {
       this.mode = 'showlist';
       this.pagetitle = 'IZ-RP';
     },
@@ -764,7 +922,7 @@ var app = new Vue({
       this.selectTreat = this.treatmentList.indexOf(this.singleAnimal.group);
       this.selectFarm = null;
       this.pagetitle = "Edit " + this.printTag(tag);
-      this.mode = 'addlist';
+      this.mode = 'editanimal';
 
 
     },
@@ -843,6 +1001,19 @@ var app = new Vue({
       const bornAt = Math.floor(new Date(born) / (24 * 3600000));
       const now = Math.floor(new Date() / (24 * 3600000));
       return (now - bornAt);
+    },
+
+    /**
+     * Calculates days difference
+     * @param {String} born
+     * @returns {Number}
+     */
+    dosage: function (born) {
+      const bornAt = Math.floor(new Date(born) / (24 * 3600000));
+      const now = Math.floor(new Date() / (24 * 3600000));
+      if ((now - bornAt)>=53) return "Dose 3";
+      else if ((now - bornAt)>=49) return "Dose 2";
+      else return "Dose 1";
     },
 
     /**
