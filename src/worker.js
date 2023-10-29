@@ -1,11 +1,11 @@
 /* global self, caches, fetch */
 'use strict'
 
-var cachename = 'shopping-list-vuejs-pouchdb-0.0.1'
+var cachename = 'izrp-vuejs-pouchdb-0.0.1'
 var urlstocache = [
   'index.html',
-  'shoppinglist.js',
-  'shoppinglist.css',
+  'izrp.js',
+  'izrp.css',
   'https://cdnjs.cloudflare.com/ajax/libs/cuid/1.3.8/browser-cuid.min.js',
   'https://cdn.jsdelivr.net/gh/pouchdb/pouchdb@6.3.4/dist/pouchdb.min.js',
   'https://cdn.jsdelivr.net/gh/pouchdb/pouchdb@6.3.4/dist/pouchdb.find.min.js',
