@@ -14,6 +14,7 @@ const sampleAnimalList = {
   "alive": true,
   "group": null,
   "batch": null,
+  "stall": 1,
   "createdAt": "",
   "createdBy": "",
   "updatedAt": "",
@@ -23,7 +24,7 @@ const sampleAnimalList = {
 // template animal list score object
 const sampleAnimalScore = {
   "_id": "",
-  "type": "item",
+  "type": "score",
   "version": 1,
   "tag": 0,
   "scoreFecal": 1,
@@ -31,6 +32,7 @@ const sampleAnimalScore = {
   "scoreEar": 3,
   "scoreEye": 4,
   "temperature": 0.0,
+  "treatment": "",
   "createdAt": "",
   "createdBy": "",
   "updatedAt": "",
@@ -42,7 +44,7 @@ const sampleBatch = {
   "_id": "",
   "type": "batch",
   "version": 1,
-  "farm":"",
+  "farm": "",
   "arrivalDate": "",
   "createdAt": "",
 };
@@ -73,7 +75,7 @@ const sortTag = (a, b) => {
 const newestFirst = (a, b) => {
   if (a.createdAt > b.createdAt) return -1;
   if (a.createdAt < b.createdAt) return 1;
-  return 0 
+  return 0
 };
 
 
@@ -124,7 +126,7 @@ var app = new Vue({
     treatmentList: [],
     newFarm: '',
     newTreat: '',
-    user:'',
+    user: '',
     singleAnimal: null,
     singleScore: null,
     currentAnimalId: null,
@@ -137,7 +139,12 @@ var app = new Vue({
     syncStatus: 'notsyncing',
     debug: null,
     error: null,
-
+    selected: 0,
+    options: [
+      { text: 'Todos', value: 0 },
+      { text: 'Piquete 1', value: 1 },
+      { text: 'Piquete 2', value: 2 }
+    ]
   },
   computed: {
     /**
@@ -149,6 +156,124 @@ var app = new Vue({
     sortedAnimalList: function () {
       return this.animalList.sort(sortTag);
     },
+    /**
+     * Calculates the animal list but sorted by 
+     * tag order
+     * 
+     * @returns {Array}
+     */
+    sortedAnimalListLate: function () {
+      let list = [];
+      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < this.animalList.length; i++) {
+        var aux =0;
+        for (let j = 0; j < late.length; j++) {
+          if (late[j].tag == this.animalList[i].tag) {
+            aux +=1;
+          }
+        }
+        if (aux == 0) list.push(this.animalList[i]);
+        
+      }
+
+      return list.sort(sortTag);
+
+    },
+    /**
+     * Calculates the animal list but sorted by 
+     * tag order
+     * 
+     * @returns {Array}
+     */
+    sortedAnimalListOk: function () {
+
+      let list2 = [];
+
+      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < this.animalList.length; i++) {
+        for (let j = 0; j < ok2.length; j++) {
+
+          if (ok2[j].tag == this.animalList[i].tag) {
+            list2.push(this.animalList[i]);
+          }
+        }
+
+      }
+      return list2.sort(sortTag);
+    },
+    /**
+     * Calculates the animal list but sorted by
+     * tag order
+     * 
+     * @returns {Array}
+     */
+    piquete1AnimalListLate: function () {
+      let animalFiltered = this.animalList.filter(function (piquete1) { return piquete1.stall == 1; });
+      let list = [];
+      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < animalFiltered.length; i++) {
+        var aux =0;
+        for (let j = 0; j < late.length; j++) {
+          if (late[j].tag == animalFiltered[i].tag) {
+            aux +=1;
+          }
+        }
+        if (aux == 0) list.push(animalFiltered[i]);
+        
+      }
+
+      return list.sort(sortTag);
+    },
+    piquete1AnimalListOk: function () {
+      let animalFiltered = this.animalList.filter(function (piquete1) { return piquete1.stall == 1; });
+      let list2 = [];
+      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < animalFiltered.length; i++) {
+        for (let j = 0; j < ok2.length; j++) {
+
+          if (ok2[j].tag == animalFiltered[i].tag) {
+            list2.push(animalFiltered[i]);
+          }
+        }
+
+      }
+      return list2.sort(sortTag);
+    },
+    piquete2AnimalListLate: function () {
+      let animalFiltered = this.animalList.filter(function (piquete2) { return piquete2.stall == 2; });
+      let list = [];
+      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < animalFiltered.length; i++) {
+        var aux =0;
+        for (let j = 0; j < late.length; j++) {
+          if (late[j].tag == animalFiltered[i].tag) {
+            aux +=1;
+          }
+        }
+        if (aux == 0) list.push(animalFiltered[i]);
+        
+      }
+
+      return list.sort(sortTag);
+    },
+    piquete2AnimalListOk: function () {
+      let animalFiltered = this.animalList.filter(function (piquete2) { return piquete2.stall == 2; });
+      let list2 = [];
+      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      for (let i = 0; i < animalFiltered.length; i++) {
+        for (let j = 0; j < ok2.length; j++) {
+
+          if (ok2[j].tag == animalFiltered[i].tag) {
+            list2.push(animalFiltered[i]);
+          }
+        }
+
+      }
+      return list2.sort(sortTag);
+    },
+
+
+
     /**
      * Calculates the Animal Score items but sorted into
      * date order - newest first
@@ -175,17 +300,17 @@ var app = new Vue({
           edit = true;
         }
       }
-      if (typeof(this.singleAnimal.tag)!="number") valid = false;
-        
+      if (typeof (this.singleAnimal.tag) != "number") valid = false;
+
       if (this.singleAnimal.tag < 1) valid = false;
-      if (!edit){
+      if (!edit) {
         for (var i in this.animalList) {
           if (this.animalList[i].tag == this.singleAnimal.tag) {
             valid = false;
           }
         }
       }
-      
+
       return (valid);
     },
     /**
@@ -195,7 +320,7 @@ var app = new Vue({
 
     * @returns {Boolean}
     */
-    isEdit: function(){
+    isEdit: function () {
       for (var i in this.animalList) {
         if (this.animalList[i]._id == this.singleAnimal._id) {
           return true;
@@ -227,7 +352,7 @@ var app = new Vue({
       // get all of the animal list items
       var q = {
         selector: {
-          type: 'item'
+          type: 'score'
         }
       };
       return db.find(q);
@@ -253,8 +378,8 @@ var app = new Vue({
       this.user = data.user;
       this.startSync();
     }).catch((e) => { });
-    
-    
+
+
 
   },
   methods: {
@@ -265,6 +390,13 @@ var app = new Vue({
     onClickSettings: function () {
       this.mode = 'settings';
       this.pagetitle = 'Config';
+    },
+    /**
+ * Called when the about button is pressed. Sets the mode
+ * to 'about' so the Vue displays the about panel.
+ */
+    onClickEditList: function () {
+      this.mode = 'editlist';
     },
     /**
      * Called when the about button is pressed. Sets the mode
@@ -333,7 +465,7 @@ var app = new Vue({
             var arr = null;
 
             // see if it's an incoming item or list or something else
-            if (change._id.match(/^item/)) {
+            if (change._id.match(/^score/)) {
               arr = this.animalScoreList;
             } else if (change._id.match(/^list/)) {
               arr = this.animalList;
@@ -437,13 +569,13 @@ var app = new Vue({
     },
 
     /**
-     * Called when the user clicks the Add Shopping List button. Sets
-     * the mode to 'addlist' to reveal the add shopping list form and
+     * Called when the user clicks the Add Animal button. Sets
+     * the mode to 'addlist' to reveal the add animal list form and
      * resets the form variables.
      */
     onClickAddAnimal: function () {
 
-      // open shopping list form
+      // open animal list form
 
       this.pagetitle = 'Cadastar Animal';
       this.mode = 'addlist';
@@ -454,69 +586,66 @@ var app = new Vue({
       this.singleAnimal.createdBy = this.user;
       this.newFarm = "";
       this.selectFarm = null;
-      
-      
-
     },
-    populateLists: function(){
-      var list=[];
-      for (const element of this.batchList){
+
+    populateLists: function () {
+      var list = [];
+      for (const element of this.batchList) {
         list.push(element.farm);
       }
       this.farmList = list.filter((value, index, array) => array.indexOf(value) === index);
-      list=[];
-      for (const element of this.animalList){
+      list = [];
+      for (const element of this.animalList) {
         list.push(element.group);
       }
       this.treatmentList = list.filter((value, index, array) => array.indexOf(value) === index);
-      
+
     },
 
 
-  
+
     /**
-     * Called when the Save Shopping List button is pressed.
+     * Called when the Save Animal List button is pressed.
      * Writes the new list to PouchDB and adds it to the Vue 
      * model's animalScoreList array
      */
     onClickSaveAnimal: function () {
-      
+
 
       // add timestamps
       this.singleAnimal.updatedAt = new Date().toISOString();
       this.singleAnimal.updatedBy = this.user;
       if (this.validateSave()) {
         if (this.selectTreat == -1) {
-            
+
           this.treatmentList.push(this.newTreat);
           this.singleAnimal.group = this.newTreat;
         }
         else {
           this.singleAnimal.group = this.treatmentList[this.selectTreat];
         }
-        if (this.selectBatch == -1)
-        {
+        if (this.selectBatch == -1) {
           this.singleBatch._id = 'batch:' + cuid();
           this.singleBatch.createdAt = new Date().toISOString();
           this.singleBatch.updatedAt = new Date().toISOString();
           if (this.selectFarm == -1) {
-            
+
             this.farmList.push(this.newFarm);
             this.singleBatch.farm = this.newFarm;
           }
           else {
             this.singleBatch.farm = this.farmList[this.selectFarm];
           }
-          
+
           if (typeof this.singleBatch._rev === 'undefined') {
             this.batchList.push(this.singleBatch);
           }
-          this.singleAnimal.batch = (this.batchList.length-1);
+          this.singleAnimal.batch = (this.batchList.length - 1);
           db.put(this.singleBatch).then((data) => {
             // keep the revision tokens
             this.singleBatch._rev = data.rev;
           });
-          
+
         }
         else {
           this.singleAnimal.batch = this.selectBatch;
@@ -536,6 +665,50 @@ var app = new Vue({
         });
       }
     },
+
+
+    /**
+     * Called when the Save Animal List button is pressed.
+     * Writes the new list to PouchDB and adds it to the Vue 
+     * model's animalScoreList array
+     * @param {String} id
+     * @param {Number} tag
+     */
+    onClickTreatAnimal: function (id, tag) {
+      // add timestamps
+
+      this.singleScore = JSON.parse(JSON.stringify(sampleAnimalScore));
+      this.singleScore._id = 'score:' + cuid();
+      this.singleScore.tag = tag;
+      this.singleScore.scoreFecal = null;
+      this.singleScore.scoreNose = null;
+      this.singleScore.scoreEar = null;
+      this.singleScore.scoreEye = null;
+      this.singleScore.temperature = null;
+      this.singleScore.createdAt = new Date().toISOString();
+      this.singleScore.createdBy = this.user;
+      this.singleScore.updatedAt = new Date().toISOString();
+      this.singleScore.updatedBy = this.user;
+      this.singleScore.treatment = new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0');
+
+
+
+      // add to on-screen list, if it's not there already
+      if (typeof this.singleScore._rev === 'undefined') {
+        this.animalScoreList.unshift(this.singleScore);
+      }
+
+      // write to database
+      db.put(this.singleScore).then((data) => {
+        // keep the revision tokens
+        this.singleScore._rev = data.rev;
+
+      });
+
+
+    },
+
+
     validateSave: function () {
       var edit = false;
       var valid = true;
@@ -545,32 +718,30 @@ var app = new Vue({
           edit = true;
         }
       }
-      if (typeof(this.singleAnimal.tag)!="number")
-        {valid = false; track+=1;}
-      if (this.singleAnimal.tag < 1)
-        {valid = false;track+=2;}
-      if (edit == false){
+      if (typeof (this.singleAnimal.tag) != "number") { valid = false; track += 1; }
+      if (this.singleAnimal.tag < 1) { valid = false; track += 2; }
+      if (edit == false) {
         for (var i in this.animalList) {
           if (this.animalList[i].tag == this.singleAnimal.tag) {
-            valid == false;track+=4;
+            valid == false; track += 4;
           }
         }
       }
-      if (this.singleAnimal.name == "" || this.singleAnimal.name == null) {valid = false;track+=8;}
-      if (this.singleAnimal.bornAt == "" || this.singleAnimal.bornAt == null) {valid = false;track+=16;}
-      if (this.singleAnimal.name == "") {valid = false;track+=32;}
-      if (this.singleAnimal.batch == -1){
-        if (this.singleBatch.farm == null || (this.singleBatch.farm == -1 && this.newFarm == "")) {valid = false;track+=64;}
-        if (this.singleBatch.arrivalDate == "" || this.singleBatch.arrivalDate == null){valid = false;track+=128;}
+      if (this.singleAnimal.name == "" || this.singleAnimal.name == null) { valid = false; track += 8; }
+      if (this.singleAnimal.bornAt == "" || this.singleAnimal.bornAt == null) { valid = false; track += 16; }
+      if (this.singleAnimal.name == "") { valid = false; track += 32; }
+      if (this.singleAnimal.batch == -1) {
+        if (this.singleBatch.farm == null || (this.singleBatch.farm == -1 && this.newFarm == "")) { valid = false; track += 64; }
+        if (this.singleBatch.arrivalDate == "" || this.singleBatch.arrivalDate == null) { valid = false; track += 128; }
       }
-      
+
       return (valid);
-      
+
     },
-  
+
     /**
      * Called when the Back button is pressed. Returns to the
-     * home screen with a lit of shopping lists.
+     * home screen with a lit of animal list.
      */
     onBack: function () {
       this.mode = 'showlist';
@@ -578,7 +749,7 @@ var app = new Vue({
     },
 
     /**
-     * Called when the Edit button is pressed next to a shopping list.
+     * Called when the Edit button is pressed next to a animal list.
      * We locate the list document by id and change mode to "addlist",
      * pre-filling the form with that document's details.
      * @param {String} id
@@ -586,20 +757,20 @@ var app = new Vue({
      */
     onClickEdit: function (id, tag) {
 
-      
+
       this.singleAnimal = this.findDoc(this.animalList, id).doc;
-      this.singleBatch = this.findDoc(this.batchList,this.singleAnimal.batch, id ).doc;
+      this.singleBatch = this.findDoc(this.batchList, this.singleAnimal.batch, id).doc;
       this.selectBatch = this.singleAnimal.batch;
       this.selectTreat = this.treatmentList.indexOf(this.singleAnimal.group);
       this.selectFarm = null;
       this.pagetitle = "Edit " + this.printTag(tag);
       this.mode = 'addlist';
 
-    
+
     },
 
     /**
-     * Called when the delete button is pressed next to a shopping list.
+     * Called when the delete button is pressed next to a animal list.
      * The shopping list document is located, removed from PouchDB and
      * removed from Vue's animalScoreList array.
      * @param {String} id
@@ -611,10 +782,10 @@ var app = new Vue({
       });
     },
 
-    // the user wants to see the contents of a shopping list
+    // the user wants to see the contents of a animal list
     // we load it and switch views
     /**
-     * Called when the user wants to edit the contents of a shopping list.
+     * Called when the user wants to edit the contents of a animal list.
      * The mode is set to 'itemedit'. Vue's currentListId is set to this list's
      * id field.
      * @param {String} id
@@ -627,7 +798,7 @@ var app = new Vue({
     },
 
     /**
-     * Called when a new shopping list item is added. A new shopping list item
+     * Called when a new animal list item is added. A new animal list item
      * object is created with a unique id. It is written to PouchDB and added
      * to Vue's animalScoreList array
      */
@@ -651,7 +822,7 @@ var app = new Vue({
 
 
     /**
-     * Called when an item is deleted from a shopping list. We locate the item
+     * Called when an item is deleted from a animal list. We locate the item
      * in the list, delete it from PouchDB and remove it from the animalScoreList
      * Vue array.
      * @param {String} id

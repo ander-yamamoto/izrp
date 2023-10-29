@@ -85,7 +85,8 @@
       <div class="px-3 py-2">
         <b-img src="https://picsum.photos/500/200/?image=54" fluid thumbnail></b-img>
         <li>Dashboard</li>
-        <li>Lista de Animais</li>
+        <li v-on:click="onBack">Lista de Animais</li>
+        <li v-on:click="onClickEditList"> Editar Lista</li>
       </div>
     </b-sidebar>
 
@@ -102,14 +103,129 @@
       <!-- list of animals -->
       {{debug}}
       <b-row align-h="center" v-if="mode == 'showlist'">
+        <div>
+          <b-tabs content-class="mt-3" align="center " pills v-model="selected">
+            <b-tab title="Todos" align="center">
+              <b-list-group class="list-group" style="max-width: 400px">
+                <b-list-group-item class="bg-warning" button v-for="list in sortedAnimalListLate" style="max-width: 400px"
+                  v-on:click="onClickTreatAnimal(list._id, list.tag)">
+                  <b-row align-v="center">
+                    <b-col cols="auto" class="text-center">
+                      <div>{{list.name.substr(0,8)}}</div>
+                      <div class="h1">{{printTag(list.tag)}}</div>
+                    </b-col>
+                    <b-col>
+                      <div>piquete: {{list.stall}}</div>
+                      <div>grupo: {{list.group}}</div>
+                      <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} </div>
+                    </b-col>
+                  </b-row>
+                </b-list-group-item>
+              </b-list-group>
+              <b-list-group class="list-group" style="max-width: 400px">
+                <b-list-group-item class="bg-success" v-for="list in sortedAnimalListOk" style="max-width: 400px">
+                  <b-row align-v="center">
+                    <b-col cols="auto" class="text-center">
+                      <div>{{list.name.substr(0,8)}}</div>
+                      <div class="h1">{{printTag(list.tag)}}</div>
+                    </b-col>
+                    <b-col>
+                      <div>piquete: {{list.stall}}</div>
+                      <div>grupo: {{list.group}}</div>
+                      <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} </div>
+                    </b-col>
+                  </b-row>
+                </b-list-group-item>
+              </b-list-group>
+            </b-tab>
+            <b-tab title="Piquete 1" align="center">
+              <b-list-group class="list-group" style="max-width: 400px">
+                <b-list-group-item class="bg-warning" button v-for="list in piquete1AnimalListLate" style="max-width: 400px"
+                  v-on:click="onClickTreatAnimal(list._id, list.tag)">
+                  <b-row align-v="center">
+                    <b-col cols="auto" class="text-center">
+                      <div>{{list.name.substr(0,8)}}</div>
+                      <div class="h1">{{printTag(list.tag)}}</div>
+                    </b-col>
+                    <b-col>
+                      <div>piquete: {{list.stall}}</div>
+                      <div>grupo: {{list.group}}</div>
+                      <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} </div>
+                    </b-col>
+                  </b-row>
+                </b-list-group-item>
+              </b-list-group>
+              <b-list-group class="list-group" style="max-width: 400px">
+                <b-list-group-item class="bg-success" v-for="list in piquete1AnimalListOk" style="max-width: 400px">
+                  <b-row align-v="center">
+                    <b-col cols="auto" class="text-center">
+                      <div>{{list.name.substr(0,8)}}</div>
+                      <div class="h1">{{printTag(list.tag)}}</div>
+                    </b-col>
+                    <b-col>
+                      <div>piquete: {{list.stall}}</div>
+                      <div>grupo: {{list.group}}</div>
+                      <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} </div>
+                    </b-col>
+                  </b-row>
+                </b-list-group-item>
+              </b-list-group>
+            </b-tab>
+            <b-tab title="Piquete 2" align="center">
+              <b-list-group class="list-group" style="max-width: 400px">
+                <b-list-group class="list-group" style="max-width: 400px">
+                  <b-list-group-item class="bg-warning" button v-for="list in piquete2AnimalListLate" style="max-width: 400px"
+                    v-on:click="onClickTreatAnimal(list._id, list.tag)">
+                    <b-row align-v="center">
+                      <b-col cols="auto" class="text-center">
+                        <div>{{list.name.substr(0,8)}}</div>
+                        <div class="h1">{{printTag(list.tag)}}</div>
+                      </b-col>
+                      <b-col>
+                        <div>piquete: {{list.stall}}</div>
+                        <div>grupo: {{list.group}}</div>
+                        <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} </div>
+                      </b-col>
+                    </b-row>
+                  </b-list-group-item>
+                </b-list-group>
+                <b-list-group class="list-group" style="max-width: 400px">
+                  <b-list-group-item class="bg-success" v-for="list in piquete2AnimalListOk" style="max-width: 400px">
+                    <b-row align-v="center">
+                      <b-col cols="auto" class="text-center">
+                        <div>{{list.name.substr(0,8)}}</div>
+                        <div class="h1">{{printTag(list.tag)}}</div>
+                      </b-col>
+                      <b-col>
+                        <div>piquete: {{list.stall}}</div>
+                        <div>grupo: {{list.group}}</div>
+                        <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} </div>
+                      </b-col>
+                    </b-row>
+                  </b-list-group-item>
+                </b-list-group>
+
+            </b-tab>
+          </b-tabs>
+        </div>
+
+
+      </b-row>
+      <!-- list of animals -->
+
+      <!-- edit list of animals -->
+      {{debug}}
+      <b-row align-h="center" v-if="mode == 'editlist'">
+
         <b-list-group class="list-group" style="max-width: 400px">
-          <b-list-group-item button v-for="list in sortedAnimalList" style="max-width: 400px" v-on:click="onClickTag(list._id, list.tag)">
+          <b-list-group-item v-for="list in sortedAnimalList" style="max-width: 400px">
             <b-row align-v="center">
               <b-col cols="auto" class="text-center">
                 <div>{{list.name.substr(0,8)}}</div>
                 <div class="h1">{{printTag(list.tag)}}</div>
               </b-col>
               <b-col>
+                <div>piquete: {{list.stall}}</div>
                 <div>grupo: {{list.group}}</div>
                 <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} </div>
               </b-col>
@@ -125,8 +241,14 @@
           </b-list-group-item>
         </b-list-group>
 
+
+
+
+
       </b-row>
-      <!-- list of animals -->
+      <!-- edit list of animals -->
+
+
 
       <!--Settings-->
       <b-card v-if="mode == 'settings'">
@@ -156,7 +278,7 @@
           <b-icon-check></b-icon-check>
           Syncing
         </b-button>
-        
+
 
 
       </b-card> <!--End Setings-->
@@ -200,6 +322,14 @@
                 </div>
               </div>
             </b-col>
+            <b-col lg="2">
+              <div role="group">
+                <label for="input-live">Piquete:</label>
+                <div>
+                  <b-form-input v-model="singleAnimal.stall" required></b-form-input>
+                </div>
+              </div>
+            </b-col>
           </b-row>
           <b-row>
             <div role="group">
@@ -207,14 +337,15 @@
               <div md>
                 <b-form-select v-model="selectTreat" required>
                   <b-form-select-option :value="null">Please select an option</b-form-select-option>
-                  <b-form-select-option v-for="(treat,index) in treatmentList" v-bind:value="index">{{treat}}</b-form-select-option>
+                  <b-form-select-option v-for="(treat,index) in treatmentList"
+                    v-bind:value="index">{{treat}}</b-form-select-option>
                   <b-form-select-option value=-1>Add new</b-form-select-option>
                 </b-form-select>
               </div>
             </div>
           </b-row>
           <b-row v-if="selectTreat == -1">
-            <b-form-input v-model = "newTreat"></b-form-input>
+            <b-form-input v-model="newTreat"></b-form-input>
           </b-row>
           <b-row>
             <div role="group">
@@ -229,7 +360,7 @@
               </div>
             </div>
           </b-row>
-          
+
           <b-row v-if=" selectBatch == -1 ">
             <b-row sm="4">
               <div role="group">
@@ -246,7 +377,7 @@
             </b-row>
             <b-row>
               <b-col sm="4" v-if="selectFarm == -1 ">
-                <b-form-input v-model = "newFarm"></b-form-input>
+                <b-form-input v-model="newFarm"></b-form-input>
               </b-col>
               <b-col sm="4">
                 <div role="group">
