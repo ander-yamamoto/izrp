@@ -815,36 +815,37 @@ var app = new Vue({
      * @param {Number} tag
      */
     onClickTreatAnimal: function (id, tag) {
-      // add timestamps
 
-      this.singleScore = JSON.parse(JSON.stringify(sampleAnimalScore));
-      this.singleScore._id = 'score:' + cuid();
-      this.singleScore.tag = tag;
-      this.singleScore.scoreFecal = null;
-      this.singleScore.scoreNose = null;
-      this.singleScore.scoreEar = null;
-      this.singleScore.scoreEye = null;
-      this.singleScore.temperature = null;
-      this.singleScore.createdAt = new Date().toISOString();
-      this.singleScore.createdBy = this.user;
-      this.singleScore.updatedAt = new Date().toISOString();
-      this.singleScore.updatedBy = this.user;
-      this.singleScore.treatment = new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0');
+      if (confirm("Confirmação de tratamento!") == true) {  
+        
+        this.singleScore = JSON.parse(JSON.stringify(sampleAnimalScore));
+        this.singleScore._id = 'score:' + cuid();
+        this.singleScore.tag = tag;
+        this.singleScore.scoreFecal = null;
+        this.singleScore.scoreNose = null;
+        this.singleScore.scoreEar = null;
+        this.singleScore.scoreEye = null;
+        this.singleScore.temperature = null;
+        this.singleScore.createdAt = new Date().toISOString();
+        this.singleScore.createdBy = this.user;
+        this.singleScore.updatedAt = new Date().toISOString();
+        this.singleScore.updatedBy = this.user;
+        this.singleScore.treatment = new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0');
 
 
 
-      // add to on-screen list, if it's not there already
-      if (typeof this.singleScore._rev === 'undefined') {
-        this.animalScoreList.unshift(this.singleScore);
+        // add to on-screen list, if it's not there already
+        if (typeof this.singleScore._rev === 'undefined') {
+          this.animalScoreList.unshift(this.singleScore);
+        }
+
+        // write to database
+        db.put(this.singleScore).then((data) => {
+          // keep the revision tokens
+          this.singleScore._rev = data.rev;
+
+        });
       }
-
-      // write to database
-      db.put(this.singleScore).then((data) => {
-        // keep the revision tokens
-        this.singleScore._rev = data.rev;
-
-      });
-
 
     },
 
@@ -884,7 +885,7 @@ var app = new Vue({
      * home screen with a lit of animal list.
      */
     onBack: function () {
-      if (this.mode == 'editanimal') this.mode = 'editlist';
+      if (this.mode == 'editanimal' || this.mode == 'addlist') this.mode = 'editlist';
       else this.mode = 'showlist';
       this.pagetitle = 'IZ-RP';
     },
