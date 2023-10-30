@@ -140,17 +140,10 @@ var app = new Vue({
     debug: null,
     error: null,
     selected: 0,
-    options: [
-      { text: 'Todos', value: 0 },
-      { text: 'Piquete 1', value: 1 },
-      { text: 'Piquete 2', value: 2 }
-    ],
     selected2: 0,
     selected3: 0,
-    options2: [
-      { text: 'Piquete 1', value: 1 },
-      { text: 'Piquete 2', value: 2 }
-    ]
+    selected4: 0,
+    selected5: 0,
   },
   computed: {
     /**

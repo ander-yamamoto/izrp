@@ -112,10 +112,10 @@
       {{debug}}
       <b-row align-h="center" v-if="mode == 'showlist'">
         <div>
-          <b-tabs content-class="mt-3" align="center " pills v-model="selected">
+          <b-tabs content-class="mt-3"  align="center " pills v-model="selected">
             <b-tab align="center">
               <template #title>
-                All({{animalList.length}})
+                Todos ({{animalList.length}})
               </template>
               <b-list-group class="list-group" style="max-width: 400px">
                 <b-list-group-item class="bg-warning" button v-for="list in sortedAnimalListLate"
@@ -151,179 +151,18 @@
                 </b-list-group-item>
               </b-list-group>
             </b-tab>
-            <b-tab align="center">
-              <template #title>
-                Piq1({{animalList.filter(function (piquete1) { return piquete1.stall == 1; }).length}})
-              </template>
-              <b-list-group class="list-group" style="max-width: 400px">
-                <b-list-group-item class="bg-warning" button v-for="list in piquete1AnimalListLate"
-                  style="max-width: 400px" v-on:click="onClickTreatAnimal(list._id, list.tag)">
-                  <b-row align-v="center">
-                    <b-col cols="auto" class="text-center">
-                      <div>{{list.name.substr(0,8)}}</div>
-                      <div class="h1">{{printTag(list.tag)}}</div>
-                    </b-col>
-                    <b-col>
-                      <div>piquete {{list.stall}}</div>
-                      <div> {{list.group}}</div>
-                      <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
-                          {{dosage(list.bornAt)}}</div>
-                    </b-col>
-                  </b-row>
-                </b-list-group-item>
-              </b-list-group>
-              <b-list-group class="list-group" style="max-width: 400px">
-                <b-list-group-item class="bg-success" v-for="list in piquete1AnimalListOk" style="max-width: 400px">
-                  <b-row align-v="center">
-                    <b-col cols="auto" class="text-center">
-                      <div>{{list.name.substr(0,8)}}</div>
-                      <div class="h1">{{printTag(list.tag)}}</div>
-                    </b-col>
-                    <b-col>
-                      <div>piquete {{list.stall}}</div>
-                      <div> {{list.group}}</div>
-                      <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
-                          {{dosage(list.bornAt)}}</div>
-                    </b-col>
-                  </b-row>
-                </b-list-group-item>
-              </b-list-group>
-            </b-tab>
-            <b-tab align="center">
-              <template #title>
-                Piq2({{animalList.filter(function (piquete2) { return piquete2.stall == 2; }).length}})
-              </template>
-              <b-list-group class="list-group" style="max-width: 400px">
-                <b-list-group class="list-group" style="max-width: 400px">
-                  <b-list-group-item class="bg-warning" button v-for="list in piquete2AnimalListLate"
-                    style="max-width: 400px" v-on:click="onClickTreatAnimal(list._id, list.tag)">
-                    <b-row align-v="center">
-                      <b-col cols="auto" class="text-center">
-                        <div>{{list.name.substr(0,8)}}</div>
-                        <div class="h1">{{printTag(list.tag)}}</div>
-                      </b-col>
-                      <b-col>
-                        <div>piquete {{list.stall}}</div>
-                        <div> {{list.group}}</div>
-                        <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
-                            {{dosage(list.bornAt)}}</div>
-                      </b-col>
-                    </b-row>
-                  </b-list-group-item>
-                </b-list-group>
-                <b-list-group class="list-group" style="max-width: 400px">
-                  <b-list-group-item class="bg-success" v-for="list in piquete2AnimalListOk" style="max-width: 400px">
-                    <b-row align-v="center">
-                      <b-col cols="auto" class="text-center">
-                        <div>{{list.name.substr(0,8)}}</div>
-                        <div class="h1">{{printTag(list.tag)}}</div>
-                      </b-col>
-                      <b-col>
-                        <div>piquete {{list.stall}}</div>
-                        <div> {{list.group}}</div>
-                        <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
-                            {{dosage(list.bornAt)}}</div>
-                      </b-col>
-                    </b-row>
-                  </b-list-group-item>
-                </b-list-group>
-            </b-tab>
-            
-            <b-tab align="center">
-              <template #title>
-                Zn({{animalList.filter(function (zinco) { return zinco.group == "zinco"; }).length}})
-              </template>
-              <b-tabs content-class="mt-3" align="center " pills v-model="selected2">
-                <b-tab align="center">
-                  <template #title>
-                    Piquete 1 ({{animalList.filter(function (zinco) { return zinco.group == "zinco"; }).filter(function (piquete) { return piquete.stall == 1; }).length}})
-                  </template>
-                  <b-list-group class="list-group" style="max-width: 400px">
-                    <b-list-group-item class="bg-warning" button v-for="list in zincPiquete1AnimalListLate"
-                      style="max-width: 400px" v-on:click="onClickTreatAnimal(list._id, list.tag)">
-                      <b-row align-v="center">
-                        <b-col cols="auto" class="text-center">
-                          <div>{{list.name.substr(0,8)}}</div>
-                          <div class="h1">{{printTag(list.tag)}}</div>
-                        </b-col>
-                        <b-col>
-                          <div>piquete {{list.stall}}</div>
-                          <div> {{list.group}}</div>
-                          <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
-                              {{dosage(list.bornAt)}}</div>
-                        </b-col>
-                      </b-row>
-                    </b-list-group-item>
-                  </b-list-group>
-                  <b-list-group class="list-group" style="max-width: 400px">
-                    <b-list-group-item class="bg-success" v-for="list in zincPiquete1AnimalListOk" style="max-width: 400px">
-                      <b-row align-v="center">
-                        <b-col cols="auto" class="text-center">
-                          <div>{{list.name.substr(0,8)}}</div>
-                          <div class="h1">{{printTag(list.tag)}}</div>
-                        </b-col>
-                        <b-col>
-                          <div>piquete {{list.stall}}</div>
-                          <div> {{list.group}}</div>
-                          <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
-                              {{dosage(list.bornAt)}}</div>
-                        </b-col>
-                      </b-row>
-                    </b-list-group-item>
-                  </b-list-group>
-                </b-tab>
-                <b-tab align="center">
-                  <template #title>
-                    Piquete 2 ({{animalList.filter(function (zinco) { return zinco.group == "zinco"; }).filter(function (piquete) { return piquete.stall == 2; }).length}})
-                  </template>
-                  <b-list-group class="list-group" style="max-width: 400px">
-                    <b-list-group-item class="bg-warning" button v-for="list in zincPiquete2AnimalListLate"
-                      style="max-width: 400px" v-on:click="onClickTreatAnimal(list._id, list.tag)">
-                      <b-row align-v="center">
-                        <b-col cols="auto" class="text-center">
-                          <div>{{list.name.substr(0,8)}}</div>
-                          <div class="h1">{{printTag(list.tag)}}</div>
-                        </b-col>
-                        <b-col>
-                          <div>piquete {{list.stall}}</div>
-                          <div> {{list.group}}</div>
-                          <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
-                              {{dosage(list.bornAt)}}</div>
-                        </b-col>
-                      </b-row>
-                    </b-list-group-item>
-                  </b-list-group>
-                  <b-list-group class="list-group" style="max-width: 400px">
-                    <b-list-group-item class="bg-success" v-for="list in zincPiquete2AnimalListOk" style="max-width: 400px">
-                      <b-row align-v="center">
-                        <b-col cols="auto" class="text-center">
-                          <div>{{list.name.substr(0,8)}}</div>
-                          <div class="h1">{{printTag(list.tag)}}</div>
-                        </b-col>
-                        <b-col>
-                          <div>piquete {{list.stall}}</div>
-                          <div> {{list.group}}</div>
-                          <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
-                              {{dosage(list.bornAt)}}</div>
-                        </b-col>
-                      </b-row>
-                    </b-list-group-item>
-                  </b-list-group>
-                </b-tab>
-              </b-tabs>
-            </b-tab>
 
             <b-tab align="center">
               <template #title>
-                Pcbo({{animalList.filter(function (placebo) { return placebo.group == "placebo"; }).length}})
+                Piquetes
               </template>
-              <b-tabs content-class="mt-3" align="center " pills v-model="selected3">
+              <b-tabs content-class="mt-3"  align="center " pills v-model="selected1">
                 <b-tab align="center">
                   <template #title>
-                    Piquete 1 ({{animalList.filter(function (placebo) { return placebo.group == "placebo"; }).filter(function (piquete) { return piquete.stall == 1; }).length}})
+                    Piquete 1 ({{animalList.filter(function (piquete1) { return piquete1.stall == 1; }).length}})
                   </template>
                   <b-list-group class="list-group" style="max-width: 400px">
-                    <b-list-group-item class="bg-warning" button v-for="list in placPiquete1AnimalListLate"
+                    <b-list-group-item class="bg-warning" button v-for="list in piquete1AnimalListLate"
                       style="max-width: 400px" v-on:click="onClickTreatAnimal(list._id, list.tag)">
                       <b-row align-v="center">
                         <b-col cols="auto" class="text-center">
@@ -340,7 +179,7 @@
                     </b-list-group-item>
                   </b-list-group>
                   <b-list-group class="list-group" style="max-width: 400px">
-                    <b-list-group-item class="bg-success" v-for="list in placPiquete1AnimalListOk" style="max-width: 400px">
+                    <b-list-group-item class="bg-success" v-for="list in piquete1AnimalListOk" style="max-width: 400px">
                       <b-row align-v="center">
                         <b-col cols="auto" class="text-center">
                           <div>{{list.name.substr(0,8)}}</div>
@@ -358,45 +197,228 @@
                 </b-tab>
                 <b-tab align="center">
                   <template #title>
-                    Piquete 2 ({{animalList.filter(function (placebo) { return placebo.group == "placebo"; }).filter(function (piquete) { return piquete.stall == 2; }).length}})
+                    Piquete 2 ({{animalList.filter(function (piquete2) { return piquete2.stall == 2; }).length}})
                   </template>
                   <b-list-group class="list-group" style="max-width: 400px">
-                    <b-list-group-item class="bg-warning" button v-for="list in placPiquete2AnimalListLate"
-                      style="max-width: 400px" v-on:click="onClickTreatAnimal(list._id, list.tag)">
-                      <b-row align-v="center">
-                        <b-col cols="auto" class="text-center">
-                          <div>{{list.name.substr(0,8)}}</div>
-                          <div class="h1">{{printTag(list.tag)}}</div>
-                        </b-col>
-                        <b-col>
-                          <div>piquete {{list.stall}}</div>
-                          <div> {{list.group}}</div>
-                          <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
-                              {{dosage(list.bornAt)}}</div>
-                        </b-col>
-                      </b-row>
-                    </b-list-group-item>
-                  </b-list-group>
-                  <b-list-group class="list-group" style="max-width: 400px">
-                    <b-list-group-item class="bg-success" v-for="list in placPiquete2AnimalListOk" style="max-width: 400px">
-                      <b-row align-v="center">
-                        <b-col cols="auto" class="text-center">
-                          <div>{{list.name.substr(0,8)}}</div>
-                          <div class="h1">{{printTag(list.tag)}}</div>
-                        </b-col>
-                        <b-col>
-                          <div>piquete {{list.stall}}</div>
-                          <div> {{list.group}}</div>
-                          <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
-                              {{dosage(list.bornAt)}}</div>
-                        </b-col>
-                      </b-row>
-                    </b-list-group-item>
-                  </b-list-group>
+                    <b-list-group class="list-group" style="max-width: 400px">
+                      <b-list-group-item class="bg-warning" button v-for="list in piquete2AnimalListLate"
+                        style="max-width: 400px" v-on:click="onClickTreatAnimal(list._id, list.tag)">
+                        <b-row align-v="center">
+                          <b-col cols="auto" class="text-center">
+                            <div>{{list.name.substr(0,8)}}</div>
+                            <div class="h1">{{printTag(list.tag)}}</div>
+                          </b-col>
+                          <b-col>
+                            <div>piquete {{list.stall}}</div>
+                            <div> {{list.group}}</div>
+                            <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
+                                {{dosage(list.bornAt)}}</div>
+                          </b-col>
+                        </b-row>
+                      </b-list-group-item>
+                    </b-list-group>
+                    <b-list-group class="list-group" style="max-width: 400px">
+                      <b-list-group-item class="bg-success" v-for="list in piquete2AnimalListOk"
+                        style="max-width: 400px">
+                        <b-row align-v="center">
+                          <b-col cols="auto" class="text-center">
+                            <div>{{list.name.substr(0,8)}}</div>
+                            <div class="h1">{{printTag(list.tag)}}</div>
+                          </b-col>
+                          <b-col>
+                            <div>piquete {{list.stall}}</div>
+                            <div> {{list.group}}</div>
+                            <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
+                                {{dosage(list.bornAt)}}</div>
+                          </b-col>
+                        </b-row>
+                      </b-list-group-item>
+                    </b-list-group>
                 </b-tab>
               </b-tabs>
-            </b-tab> 
+            </b-tab>
+            <b-tab align="center">
+              <template #title>
+                Tratamentos
+              </template>
+              <b-tabs content-class="mt-3"  align="center " pills v-model="selected2">
+                          <b-tab align="center">
+                            <template #title>
+                              Zinco ({{animalList.filter(function (zinco) { return zinco.group == "zinco"; }).length}})
+                            </template>
+                            <b-tabs content-class="mt-3" align="center " pills v-model="selected3">
+                              <b-tab align="center">
+                                <template #title>
+                                  Piquete 1 ({{animalList.filter(function (zinco) { return zinco.group == "zinco"; }).filter(function
+                                  (piquete) { return piquete.stall == 1; }).length}})
+                                </template>
+                                <b-list-group class="list-group" style="max-width: 400px">
+                                  <b-list-group-item class="bg-warning" button v-for="list in zincPiquete1AnimalListLate"
+                                    style="max-width: 400px" v-on:click="onClickTreatAnimal(list._id, list.tag)">
+                                    <b-row align-v="center">
+                                      <b-col cols="auto" class="text-center">
+                                        <div>{{list.name.substr(0,8)}}</div>
+                                        <div class="h1">{{printTag(list.tag)}}</div>
+                                      </b-col>
+                                      <b-col>
+                                        <div>piquete {{list.stall}}</div>
+                                        <div> {{list.group}}</div>
+                                        <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
+                                            {{dosage(list.bornAt)}}</div>
+                                      </b-col>
+                                    </b-row>
+                                  </b-list-group-item>
+                                </b-list-group>
+                                <b-list-group class="list-group" style="max-width: 400px">
+                                  <b-list-group-item class="bg-success" v-for="list in zincPiquete1AnimalListOk"
+                                    style="max-width: 400px">
+                                    <b-row align-v="center">
+                                      <b-col cols="auto" class="text-center">
+                                        <div>{{list.name.substr(0,8)}}</div>
+                                        <div class="h1">{{printTag(list.tag)}}</div>
+                                      </b-col>
+                                      <b-col>
+                                        <div>piquete {{list.stall}}</div>
+                                        <div> {{list.group}}</div>
+                                        <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
+                                            {{dosage(list.bornAt)}}</div>
+                                      </b-col>
+                                    </b-row>
+                                  </b-list-group-item>
+                                </b-list-group>
+                              </b-tab>
+                              <b-tab align="center">
+                                <template #title>
+                                  Piquete 2 ({{animalList.filter(function (zinco) { return zinco.group == "zinco"; }).filter(function
+                                  (piquete) { return piquete.stall == 2; }).length}})
+                                </template>
+                                <b-list-group class="list-group" style="max-width: 400px">
+                                  <b-list-group-item class="bg-warning" button v-for="list in zincPiquete2AnimalListLate"
+                                    style="max-width: 400px" v-on:click="onClickTreatAnimal(list._id, list.tag)">
+                                    <b-row align-v="center">
+                                      <b-col cols="auto" class="text-center">
+                                        <div>{{list.name.substr(0,8)}}</div>
+                                        <div class="h1">{{printTag(list.tag)}}</div>
+                                      </b-col>
+                                      <b-col>
+                                        <div>piquete {{list.stall}}</div>
+                                        <div> {{list.group}}</div>
+                                        <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
+                                            {{dosage(list.bornAt)}}</div>
+                                      </b-col>
+                                    </b-row>
+                                  </b-list-group-item>
+                                </b-list-group>
+                                <b-list-group class="list-group" style="max-width: 400px">
+                                  <b-list-group-item class="bg-success" v-for="list in zincPiquete2AnimalListOk"
+                                    style="max-width: 400px">
+                                    <b-row align-v="center">
+                                      <b-col cols="auto" class="text-center">
+                                        <div>{{list.name.substr(0,8)}}</div>
+                                        <div class="h1">{{printTag(list.tag)}}</div>
+                                      </b-col>
+                                      <b-col>
+                                        <div>piquete {{list.stall}}</div>
+                                        <div> {{list.group}}</div>
+                                        <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
+                                            {{dosage(list.bornAt)}}</div>
+                                      </b-col>
+                                    </b-row>
+                                  </b-list-group-item>
+                                </b-list-group>
+                              </b-tab>
+                            </b-tabs>
+                          </b-tab>
 
+                          <b-tab align="center">
+                            <template #title>
+                              Placebo ({{animalList.filter(function (placebo) { return placebo.group == "placebo"; }).length}})
+                            </template>
+                            <b-tabs content-class="mt-3" align="center " pills v-model="selected4">
+                              <b-tab align="center">
+                                <template #title>
+                                  Piquete 1 ({{animalList.filter(function (placebo) { return placebo.group == "placebo";
+                                  }).filter(function (piquete) { return piquete.stall == 1; }).length}})
+                                </template>
+                                <b-list-group class="list-group" style="max-width: 400px">
+                                  <b-list-group-item class="bg-warning" button v-for="list in placPiquete1AnimalListLate"
+                                    style="max-width: 400px" v-on:click="onClickTreatAnimal(list._id, list.tag)">
+                                    <b-row align-v="center">
+                                      <b-col cols="auto" class="text-center">
+                                        <div>{{list.name.substr(0,8)}}</div>
+                                        <div class="h1">{{printTag(list.tag)}}</div>
+                                      </b-col>
+                                      <b-col>
+                                        <div>piquete {{list.stall}}</div>
+                                        <div> {{list.group}}</div>
+                                        <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
+                                            {{dosage(list.bornAt)}}</div>
+                                      </b-col>
+                                    </b-row>
+                                  </b-list-group-item>
+                                </b-list-group>
+                                <b-list-group class="list-group" style="max-width: 400px">
+                                  <b-list-group-item class="bg-success" v-for="list in placPiquete1AnimalListOk"
+                                    style="max-width: 400px">
+                                    <b-row align-v="center">
+                                      <b-col cols="auto" class="text-center">
+                                        <div>{{list.name.substr(0,8)}}</div>
+                                        <div class="h1">{{printTag(list.tag)}}</div>
+                                      </b-col>
+                                      <b-col>
+                                        <div>piquete {{list.stall}}</div>
+                                        <div> {{list.group}}</div>
+                                        <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
+                                            {{dosage(list.bornAt)}}</div>
+                                      </b-col>
+                                    </b-row>
+                                  </b-list-group-item>
+                                </b-list-group>
+                              </b-tab>
+                              <b-tab align="center">
+                                <template #title>
+                                  Piquete 2 ({{animalList.filter(function (placebo) { return placebo.group == "placebo";
+                                  }).filter(function (piquete) { return piquete.stall == 2; }).length}})
+                                </template>
+                                <b-list-group class="list-group" style="max-width: 400px">
+                                  <b-list-group-item class="bg-warning" button v-for="list in placPiquete2AnimalListLate"
+                                    style="max-width: 400px" v-on:click="onClickTreatAnimal(list._id, list.tag)">
+                                    <b-row align-v="center">
+                                      <b-col cols="auto" class="text-center">
+                                        <div>{{list.name.substr(0,8)}}</div>
+                                        <div class="h1">{{printTag(list.tag)}}</div>
+                                      </b-col>
+                                      <b-col>
+                                        <div>piquete {{list.stall}}</div>
+                                        <div> {{list.group}}</div>
+                                        <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
+                                            {{dosage(list.bornAt)}}</div>
+                                      </b-col>
+                                    </b-row>
+                                  </b-list-group-item>
+                                </b-list-group>
+                                <b-list-group class="list-group" style="max-width: 400px">
+                                  <b-list-group-item class="bg-success" v-for="list in placPiquete2AnimalListOk"
+                                    style="max-width: 400px">
+                                    <b-row align-v="center">
+                                      <b-col cols="auto" class="text-center">
+                                        <div>{{list.name.substr(0,8)}}</div>
+                                        <div class="h1">{{printTag(list.tag)}}</div>
+                                      </b-col>
+                                      <b-col>
+                                        <div>piquete {{list.stall}}</div>
+                                        <div> {{list.group}}</div>
+                                        <div>{{diffDays(list.bornAt)}} {{(diffDays(list.bornAt)<=1?"dia":"dias")}} -
+                                            {{dosage(list.bornAt)}}</div>
+                                      </b-col>
+                                    </b-row>
+                                  </b-list-group-item>
+                                </b-list-group>
+                              </b-tab>
+                            </b-tabs>
+                          </b-tab>
+                </b-tabs>           
+             </b-tab>
           </b-tabs>
         </div>
 
