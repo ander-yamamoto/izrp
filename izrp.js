@@ -152,6 +152,7 @@ var app = new Vue({
      * @returns {Array}
      */
     sortedAnimalList: function () {
+      
       return this.animalList.sort(sortTag);
     },
 
@@ -200,15 +201,15 @@ var app = new Vue({
     sortedAnimalListOk: function () {
 
       let list = [];
-
-      let ok = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      let ok = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
       for (let i = 0; i < this.animalList.length; i++) {
+        var aux = 0;
         for (let j = 0; j < ok.length; j++) {
-
           if (ok[j].tag == this.animalList[i].tag) {
-            list.push(this.animalList[i]);
+            aux += 1;
           }
         }
+        if (aux != 0) list.push(this.animalList[i]);
 
       }
       if (this.selected == 0) return list.sort(sortTag);
@@ -630,36 +631,42 @@ var app = new Vue({
      * @param {Number} tag
      */
     onClickTreatAnimal: function (id, tag) {
-      // add timestamps
 
-      this.singleScore = JSON.parse(JSON.stringify(sampleAnimalScore));
-      this.singleScore._id = 'score:' + cuid();
-      this.singleScore.tag = tag;
-      this.singleScore.scoreFecal = null;
-      this.singleScore.scoreNose = null;
-      this.singleScore.scoreEar = null;
-      this.singleScore.scoreEye = null;
-      this.singleScore.temperature = null;
-      this.singleScore.createdAt = new Date().toISOString();
-      this.singleScore.createdBy = this.user;
-      this.singleScore.updatedAt = new Date().toISOString();
-      this.singleScore.updatedBy = this.user;
-      this.singleScore.treatment = new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0');
+      if (confirm("Confirmação de tratamento!") == true) {
+        
+        let test = new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0');
+        let test2 = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == test)}).filter(function (bytag) {bytag.tag == tag}).length;
+
+          if (test2==0)  {
+              this.singleScore = JSON.parse(JSON.stringify(sampleAnimalScore));
+              this.singleScore._id = 'score:' + cuid();
+              this.singleScore.tag = tag;
+              this.singleScore.scoreFecal = null;
+              this.singleScore.scoreNose = null;
+              this.singleScore.scoreEar = null;
+              this.singleScore.scoreEye = null;
+              this.singleScore.temperature = null;
+              this.singleScore.createdAt = new Date().toISOString();
+              this.singleScore.createdBy = this.user;
+              this.singleScore.updatedAt = new Date().toISOString();
+              this.singleScore.updatedBy = this.user;
+              this.singleScore.treatment = new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0');
 
 
 
-      // add to on-screen list, if it's not there already
-      if (typeof this.singleScore._rev === 'undefined') {
-        this.animalScoreList.unshift(this.singleScore);
+              // add to on-screen list, if it's not there already
+              if (typeof this.singleScore._rev === 'undefined') {
+                this.animalScoreList.unshift(this.singleScore);
+              }
+
+              // write to database
+              db.put(this.singleScore).then((data) => {
+                // keep the revision tokens
+                this.singleScore._rev = data.rev;
+
+              });
+            }
       }
-
-      // write to database
-      db.put(this.singleScore).then((data) => {
-        // keep the revision tokens
-        this.singleScore._rev = data.rev;
-
-      });
-
 
     },
 
@@ -699,7 +706,7 @@ var app = new Vue({
      * home screen with a lit of animal list.
      */
     onBack: function () {
-      if (this.mode == 'editanimal') this.mode = 'editlist';
+      if (this.mode == 'editanimal' || this.mode == 'addlist') this.mode = 'editlist';
       else this.mode = 'showlist';
       this.pagetitle = 'IZ-RP';
     },
@@ -806,9 +813,14 @@ var app = new Vue({
      * @returns {Number}
      */
     diffDays: function (born) {
-      const bornAt = Math.floor(new Date(born) / (24 * 3600000));
+      /*
+      const bornAt = Math.floor(((new Date(born)/ 3600000)+4)/24);
       const now = Math.floor(new Date() / (24 * 3600000));
-      return (now - bornAt);
+      return (now - bornAt); */
+      const bornAt = Math.floor((new Date(born)/3600000)+(new Date().getTimezoneOffset()/60));
+      const now = Math.floor(new Date() / (3600000));
+      return (Math.floor((now - bornAt)/24));
+      
     },
 
     /**
