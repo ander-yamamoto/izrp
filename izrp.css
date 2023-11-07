@@ -27,3 +27,13 @@
 .list-group{
     overflow: hidden;
 }
+
+.bg-pink{
+    --bs-bg-opacity: 1;
+    background-color:  rgb(253, 176, 222) !important;
+}
+
+.bg-red {
+    --bs-bg-opacity: 1;
+    background-color:  rgb(164, 71, 167) !important;
+    }

@@ -140,17 +140,9 @@ var app = new Vue({
     debug: null,
     error: null,
     selected: 0,
-    options: [
-      { text: 'Todos', value: 0 },
-      { text: 'Piquete 1', value: 1 },
-      { text: 'Piquete 2', value: 2 }
-    ],
+    selected1: 0,
     selected2: 0,
     selected3: 0,
-    options2: [
-      { text: 'Piquete 1', value: 1 },
-      { text: 'Piquete 2', value: 2 }
-    ]
   },
   computed: {
     /**
@@ -162,30 +154,44 @@ var app = new Vue({
     sortedAnimalList: function () {
       return this.animalList.sort(sortTag);
     },
+
     /**
      * Calculates the animal list but sorted by 
      * tag order
      * 
      * @returns {Array}
      */
-    sortedAnimalListLate: function () {
+    sortedAnimalListPending: function () {
       let list = [];
-      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      let pending = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
       for (let i = 0; i < this.animalList.length; i++) {
         var aux = 0;
-        for (let j = 0; j < late.length; j++) {
-          if (late[j].tag == this.animalList[i].tag) {
+        for (let j = 0; j < pending.length; j++) {
+          if (pending[j].tag == this.animalList[i].tag) {
             aux += 1;
           }
         }
         if (aux == 0) list.push(this.animalList[i]);
-
       }
 
-      return list.sort(sortTag);
+      if (this.selected == 0) return list.sort(sortTag);
+      else if (this.selected == 1) {
+        if (this.selected1 == 0) return list.filter(function (piquete) { return piquete.stall == 1; }).sort(sortTag);
+        else return list.filter(function (piquete) { return piquete.stall == 2; }).sort(sortTag);
+      }
+      else {
+        if (this.selected2 == 0){
+          if (this.selected3 == 0) return list.filter(function (treat) { return treat.group == "zinco"; }).filter(function (piquete1) { return piquete1.stall == 1; }).sort(sortTag);
+          else return list.filter(function (treat) { return treat.group == "zinco"; }).filter(function (piquete) { return piquete.stall == 2; }).sort(sortTag);
+        }
+        else{
+          if (this.selected3 == 0) return list.filter(function (treat) { return treat.group == "placebo"; }).filter(function (piquete1) { return piquete1.stall == 1; }).sort(sortTag);
+          else return list.filter(function (treat) { return treat.group == "placebo"; }).filter(function (piquete) { return piquete.stall == 2; }).sort(sortTag);
+        }
+      }
 
     },
-    /**
+        /**
      * Calculates the animal list but sorted by 
      * tag order
      * 
@@ -193,233 +199,35 @@ var app = new Vue({
      */
     sortedAnimalListOk: function () {
 
-      let list2 = [];
+      let list = [];
 
-      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
+      let ok = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
       for (let i = 0; i < this.animalList.length; i++) {
-        for (let j = 0; j < ok2.length; j++) {
+        for (let j = 0; j < ok.length; j++) {
 
-          if (ok2[j].tag == this.animalList[i].tag) {
-            list2.push(this.animalList[i]);
+          if (ok[j].tag == this.animalList[i].tag) {
+            list.push(this.animalList[i]);
           }
         }
 
       }
-      return list2.sort(sortTag);
-    },
-    /**
-     * Calculates the animal list but sorted by
-     * tag order
-     * 
-     * @returns {Array}
-     */
-    piquete1AnimalListLate: function () {
-      let animalFiltered = this.animalList.filter(function (piquete1) { return piquete1.stall == 1; });
-      let list = [];
-      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
-      for (let i = 0; i < animalFiltered.length; i++) {
-        var aux = 0;
-        for (let j = 0; j < late.length; j++) {
-          if (late[j].tag == animalFiltered[i].tag) {
-            aux += 1;
-          }
+      if (this.selected == 0) return list.sort(sortTag);
+      else if (this.selected == 1) {
+        if (this.selected1 == 0) return list.filter(function (piquete) { return piquete.stall == 1; }).sort(sortTag);
+        else return list.filter(function (piquete) { return piquete.stall == 2; }).sort(sortTag);
+      }
+      else {
+        if (this.selected2 == 0){
+          if (this.selected3 == 0) return list.filter(function (treat) { return treat.group == "zinco"; }).filter(function (piquete1) { return piquete1.stall == 1; }).sort(sortTag);
+          else return list.filter(function (treat) { return treat.group == "zinco"; }).filter(function (piquete) { return piquete.stall == 2; }).sort(sortTag);
         }
-        if (aux == 0) list.push(animalFiltered[i]);
-
+        else{
+          if (this.selected3 == 0) return list.filter(function (treat) { return treat.group == "placebo"; }).filter(function (piquete1) { return piquete1.stall == 1; }).sort(sortTag);
+          else return list.filter(function (treat) { return treat.group == "placebo"; }).filter(function (piquete) { return piquete.stall == 2; }).sort(sortTag);
+        }
       }
 
-      return list.sort(sortTag);
     },
-    piquete1AnimalListOk: function () {
-      let animalFiltered = this.animalList.filter(function (piquete1) { return piquete1.stall == 1; });
-      let list2 = [];
-      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
-      for (let i = 0; i < animalFiltered.length; i++) {
-        for (let j = 0; j < ok2.length; j++) {
-
-          if (ok2[j].tag == animalFiltered[i].tag) {
-            list2.push(animalFiltered[i]);
-          }
-        }
-
-      }
-      return list2.sort(sortTag);
-    },
-    piquete2AnimalListLate: function () {
-      let animalFiltered = this.animalList.filter(function (piquete2) { return piquete2.stall == 2; });
-      let list = [];
-      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
-      for (let i = 0; i < animalFiltered.length; i++) {
-        var aux = 0;
-        for (let j = 0; j < late.length; j++) {
-          if (late[j].tag == animalFiltered[i].tag) {
-            aux += 1;
-          }
-        }
-        if (aux == 0) list.push(animalFiltered[i]);
-
-      }
-
-      return list.sort(sortTag);
-    },
-    piquete2AnimalListOk: function () {
-      let animalFiltered = this.animalList.filter(function (piquete2) { return piquete2.stall == 2; });
-      let list2 = [];
-      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
-      for (let i = 0; i < animalFiltered.length; i++) {
-        for (let j = 0; j < ok2.length; j++) {
-
-          if (ok2[j].tag == animalFiltered[i].tag) {
-            list2.push(animalFiltered[i]);
-          }
-        }
-
-      }
-      return list2.sort(sortTag);
-    },
-
-    /**
-     * Calculates the animal list but sorted by
-     * tag order
-     * 
-     * @returns {Array}
-     */
-    zincPiquete1AnimalListLate: function () {
-      let animalFiltered = this.animalList.filter(function (zinco) { return zinco.group == "zinco"; }).filter(function (piquete) { return piquete.stall == 1; });
-      let list = [];
-      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
-      for (let i = 0; i < animalFiltered.length; i++) {
-        var aux = 0;
-        for (let j = 0; j < late.length; j++) {
-          if (late[j].tag == animalFiltered[i].tag) {
-            aux += 1;
-          }
-        }
-        if (aux == 0) list.push(animalFiltered[i]);
-
-      }
-
-      return list.sort(sortTag);
-    },
-    zincPiquete1AnimalListOk: function () {
-      let animalFiltered = this.animalList.filter(function (zinco) { return zinco.group == "zinco"; }).filter(function (piquete) { return piquete.stall == 1; });
-      let list2 = [];
-      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
-      for (let i = 0; i < animalFiltered.length; i++) {
-        for (let j = 0; j < ok2.length; j++) {
-
-          if (ok2[j].tag == animalFiltered[i].tag) {
-            list2.push(animalFiltered[i]);
-          }
-        }
-
-      }
-      return list2.sort(sortTag);
-    },
-    zincPiquete2AnimalListLate: function () {
-      let animalFiltered = this.animalList.filter(function (zinco) { return zinco.group == "zinco"; }).filter(function (piquete) { return piquete.stall == 2; });
-      let list = [];
-      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
-      for (let i = 0; i < animalFiltered.length; i++) {
-        var aux = 0;
-        for (let j = 0; j < late.length; j++) {
-          if (late[j].tag == animalFiltered[i].tag) {
-            aux += 1;
-          }
-        }
-        if (aux == 0) list.push(animalFiltered[i]);
-
-      }
-
-      return list.sort(sortTag);
-    },
-    zincPiquete2AnimalListOk: function () {
-      let animalFiltered = this.animalList.filter(function (zinco) { return zinco.group == "zinco"; }).filter(function (piquete) { return piquete.stall == 2; });
-      let list2 = [];
-      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
-      for (let i = 0; i < animalFiltered.length; i++) {
-        for (let j = 0; j < ok2.length; j++) {
-
-          if (ok2[j].tag == animalFiltered[i].tag) {
-            list2.push(animalFiltered[i]);
-          }
-        }
-
-      }
-      return list2.sort(sortTag);
-    },
-
-    /**
-     * Calculates the animal list but sorted by
-     * tag order
-     * 
-     * @returns {Array}
-     */
-    placPiquete1AnimalListLate: function () {
-      let animalFiltered = this.animalList.filter(function (placebo) { return placebo.group == "placebo"; }).filter(function (piquete) { return piquete.stall == 1; });
-      let list = [];
-      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
-      for (let i = 0; i < animalFiltered.length; i++) {
-        var aux = 0;
-        for (let j = 0; j < late.length; j++) {
-          if (late[j].tag == animalFiltered[i].tag) {
-            aux += 1;
-          }
-        }
-        if (aux == 0) list.push(animalFiltered[i]);
-
-      }
-
-      return list.sort(sortTag);
-    },
-    placPiquete1AnimalListOk: function () {
-      let animalFiltered = this.animalList.filter(function (placebo) { return placebo.group == "placebo"; }).filter(function (piquete) { return piquete.stall == 1; });
-      let list2 = [];
-      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
-      for (let i = 0; i < animalFiltered.length; i++) {
-        for (let j = 0; j < ok2.length; j++) {
-
-          if (ok2[j].tag == animalFiltered[i].tag) {
-            list2.push(animalFiltered[i]);
-          }
-        }
-
-      }
-      return list2.sort(sortTag);
-    },
-    placPiquete2AnimalListLate: function () {
-      let animalFiltered = this.animalList.filter(function (placebo) { return placebo.group == "placebo"; }).filter(function (piquete) { return piquete.stall == 2; });
-      let list = [];
-      let late = this.animalScoreList.filter(function (bydate) { return (bydate.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
-      for (let i = 0; i < animalFiltered.length; i++) {
-        var aux = 0;
-        for (let j = 0; j < late.length; j++) {
-          if (late[j].tag == animalFiltered[i].tag) {
-            aux += 1;
-          }
-        }
-        if (aux == 0) list.push(animalFiltered[i]);
-
-      }
-
-      return list.sort(sortTag);
-    },
-    placPiquete2AnimalListOk: function () {
-      let animalFiltered = this.animalList.filter(function (placebo) { return placebo.group == "placebo"; }).filter(function (piquete) { return piquete.stall == 2; });
-      let list2 = [];
-      let ok2 = this.animalScoreList.filter(function (byok) { return (byok.treatment == (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, '0') + "-" + String(new Date().getDate()).padStart(2, '0'))); });
-      for (let i = 0; i < animalFiltered.length; i++) {
-        for (let j = 0; j < ok2.length; j++) {
-
-          if (ok2[j].tag == animalFiltered[i].tag) {
-            list2.push(animalFiltered[i]);
-          }
-        }
-
-      }
-      return list2.sort(sortTag);
-    },
-
 
     /**
      * Calculates the Animal Score items but sorted into
